@@ -103,31 +103,23 @@ class PrintController extends Controller
             $numSerial = 1;
         }
 
+        // Handle sample direct HTML printing (first page only)
+        if ($request->input('action') === 'sample') {
+            $pages[] = [
+                'serial' => $startSerial,
+                'data' => $data,
+            ];
+            return view($viewName, compact('pages', 'data'))->with('autoPrint', true);
+        }
+
+        // Handle standard direct HTML printing (all pages)
         for ($i = 0; $i < $numSerial; $i++) {
-            // $currentSerial is start + i
             $pages[] = [
                 'serial' => $startSerial + $i,
                 'data' => $data,
             ];
         }
 
-        // Handle HTML direct printing
-        if ($request->input('action') === 'print') {
-            return view($viewName, compact('pages', 'data'))->with('autoPrint', true);
-        }
-
-        // Handle sample PDF (first page only)
-        if ($request->input('action') === 'sample') {
-            $pages = [['serial' => $startSerial, 'data' => $data]];
-        }
-
-        // 100mm = 283.465 pt, 85mm = 240.945 pt
-        $customPaper = array(0, 0, 283.465, 240.945);
-
-        $pdf = Pdf::loadView($viewName, compact('pages', 'data'))
-            ->setPaper($customPaper);
-
-        $safeModel = str_replace(['/', '\\'], '-', ($data->MODEL ?? 'print'));
-        return $pdf->stream('shipping_mark_' . $safeModel . '.pdf');
+        return view($viewName, compact('pages', 'data'))->with('autoPrint', true);
     }
 }

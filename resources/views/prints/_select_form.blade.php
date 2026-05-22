@@ -38,8 +38,6 @@
                 data-bs-dismiss="modal">Đóng</button>
         @endif
 
-        <button type="submit" name="action" value="pdf" class="form-control btn btn-primary me-1"><i
-                class="bi bi-file-earmark-pdf me-1"></i>Xuất File PDF</button>
         <button type="submit" name="action" value="sample" class="form-control btn btn-outline-warning me-1">
             <i class="bi bi-file-earmark-ruled me-1"></i>In mẫu (trang 1)
         </button>

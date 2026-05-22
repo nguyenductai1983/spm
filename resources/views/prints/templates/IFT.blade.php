@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>IFT</title>
+    <title>{{ str_replace('.', '-', $data->MODEL ?? 'IFT') }}</title>
     <style>
         @page {
             size: 100mm 85mm;

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>IFS</title>
+    <title>{{ str_replace('.', '-', $data->MODEL ?? 'IFS') }}</title>
     <style>
         @page {
             size: 100mm 85mm;
@@ -14,7 +14,7 @@
             font-family: 'DejaVu Sans', Arial, sans-serif;
             margin: 0;
             padding: 0;
-            width: 96mm;
+            width: 98mm;
         }
 
         .page-break {
@@ -22,21 +22,21 @@
         }
 
         .print-table {
-            width: 96mm;
+            width: 98mm;
             border-collapse: collapse;
             border: 2px solid black;
-            margin: 0;
+            margin: 12px 0 0 0;
         }
 
         .print-table th,
         .print-table td {
             border: 1px solid black;
-            padding: 2px 4px 2px;
-            font-size: 9.5pt;
+            padding: 2px 2px 2px;
+            font-size: 10pt;
             font-weight: bold;
             vertical-align: middle;
             line-height: 1.2;
-            height: 6.2mm;
+            height: 7mm;
         }
 
         .print-table .label-col {
