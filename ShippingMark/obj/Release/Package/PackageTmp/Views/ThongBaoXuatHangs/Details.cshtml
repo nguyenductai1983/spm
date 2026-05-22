@@ -1,0 +1,73 @@
+﻿@model ShippingMark.Models.ThongBaoXuatHang
+
+@{
+    ViewBag.Title = "Chi tiết Thông Báo Xuất Hàng";
+}
+
+<h2 class="mb-4">@ViewBag.Title</h2>
+
+<div>
+    <h4>Thông tin chung</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">Khách hàng:</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.KhachHang.Name)</dd>
+
+        <dt class="col-sm-3">Danh mục hàng hóa:</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.HangHoa.Name)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.PoNo):</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.PoNo)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.REFNO):</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.REFNO)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Ngaydukien):</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Ngaydukien)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.NgayETD):</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.NgayETD)</dd>
+    </dl>
+
+    <h4 class="mt-5">Chi tiết hàng hóa</h4>
+    <hr />
+    <table class="table">
+        <tr>
+            <th>Model</th>
+            <th>Size</th>
+            <th>Số lượng</th>
+        </tr>
+        @foreach (var item in Model.ChiTietHangHoas)
+        {
+            <tr>
+                <td>@item.MODEL</td>
+                <td>@item.SIZE</td>
+                <td>@item.SoLuongThamKhao</td>
+            </tr>
+        }
+    </table>
+
+    <h4 class="mt-5">Danh sách Container</h4>
+    <hr />
+    <table class="table">
+        <tr>
+            <th>Container số</th>
+            <th>Kích cỡ</th>
+            <th>Model</th>
+            <th>Số lượng</th>
+        </tr>
+        @foreach (var item in Model.Containers)
+        {
+            <tr>
+                <td>@item.ContainerSo</td>
+                <td>@item.KichCo</td>
+                <td>@item.ChiTietHangHoa.MODEL</td>
+                <td>@item.SoLuong</td>
+            </tr>
+        }
+    </table>
+</div>
+<p class="mt-4">
+    @Html.ActionLink("Sửa", "Edit", new { id = Model.ID }, new { @class = "btn btn-primary" }) |
+    @Html.ActionLink("Quay lại Danh sách", "Index")
+</p>

@@ -1,0 +1,22 @@
+﻿@model ShippingMark.Models.ApplicationUser
+@{
+    ViewBag.Title = "Thiết lập quyền cho người dùng";
+}
+
+<h2>Thiết lập quyền cho người dùng: @Model.UserName</h2>
+<hr />
+
+@using (Html.BeginForm("SetUserRole", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.Hidden("userId", Model.Id)
+
+    <div class="mb-3">
+        @Html.Label("Quyền", new { @class = "form-label" })
+        @Html.DropDownList("roleName", ViewBag.Roles as IEnumerable<SelectListItem>, new { @class = "form-control" })
+    </div>
+    <div class="mt-3">
+        <button type="submit" class="btn btn-primary">Lưu</button>
+        @Html.ActionLink("Trở về", "UserList", null, new { @class = "btn btn-secondary" })
+    </div>
+}

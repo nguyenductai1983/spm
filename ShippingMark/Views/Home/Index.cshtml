@@ -1,0 +1,111 @@
+﻿@using Microsoft.AspNet.Identity
+@{
+    ViewBag.Title = "Trang chủ";
+}
+<div class="jumbotron text-center bg-light rounded-3">
+    <h1 class="display-4">Shipping Mark!</h1>    
+</div>
+<div class="container">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col">
+            <div class="card h-100 shadow-sm border-primary">
+                <div class="card-body text-center d-flex flex-column">
+                    <i class="bi bi-list-ul fs-1 text-primary"></i>
+                    <h5 class="card-title mt-3">Danh sách SM</h5>
+                    <p class="card-text">
+                        Xem danh sách các mặt hàng đã được lưu trữ.
+                    </p>
+                    <div class="mt-auto">
+                        @Html.ActionLink("Xem ngay", "Index", "ChiTietHangHoas", null, new { @class = "btn btn-primary" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100 shadow-sm border-warning">
+                <div class="card-body text-center d-flex flex-column">
+                    <i class="bi bi-truck fs-1 text-warning"></i>
+                    <h5 class="card-title mt-3">Thông Báo Xuất Hàng</h5>
+                    <p class="card-text">
+                        Tạo mới, quản lý và in các thông báo xuất hàng.
+                    </p>
+                    <div class="mt-auto">
+                        @Html.ActionLink("Xem danh sách", "Index", "ThongBaoXuatHangs", null, new { @class = "btn btn-warning" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        @if (!Request.IsAuthenticated)
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm border-secondary">
+                    <div class="card-body text-center d-flex flex-column">
+                        <i class="bi bi-person-gear fs-1 text-secondary"></i>
+                        <h5 class="card-title mt-3">Đăng nhập</h5>
+                        <p class="card-text">
+                            Đăng nhập để sử dụng các chức năng khác.
+                        </p>
+                        <div class="mt-auto">
+                            @Html.ActionLink("Đăng nhập", "Login", "Account", null, new { @class = "btn btn-secondary" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (User.IsInRole("User") || User.IsInRole("Admin"))
+        {
+
+
+            @* === THẺ MỚI: QUẢN LÝ KHÁCH HÀNG === *@
+            <div class="col">
+                <div class="card h-100 shadow-sm border-info">
+                    <div class="card-body text-center d-flex flex-column">
+                        <i class="bi bi-person-badge fs-1 text-info"></i>
+                        <h5 class="card-title mt-3">Quản lý Khách Hàng</h5>
+                        <p class="card-text">
+                            Thêm mới và quản lý thông tin các khách hàng.
+                        </p>
+                        <div class="mt-auto">
+                            @Html.ActionLink("Quản lý", "Index", "KhachHangs", null, new { @class = "btn btn-info" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @* === THẺ MỚI: QUẢN LÝ HÀNG HÓA === *@
+            <div class="col">
+                <div class="card h-100 shadow-sm" style="border-color: #6c757d;">
+                    <div class="card-body text-center d-flex flex-column">
+                        <i class="bi bi-box-seam fs-1" style="color: #6c757d;"></i>
+                        <h5 class="card-title mt-3">Quản lý Hàng Hóa</h5>
+                        <p class="card-text">
+                            Quản lý danh mục các loại hàng hóa trong hệ thống.
+                        </p>
+                        <div class="mt-auto">
+                            @Html.ActionLink("Quản lý", "Index", "HangHoas", null, new { @class = "btn btn-dark" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @* Card chức năng dành riêng cho vai trò Admin *@
+        @if (User.IsInRole("Admin"))
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm border-danger">
+                    <div class="card-body text-center d-flex flex-column">
+                        <i class="bi bi-people fs-1 text-danger"></i>
+                        <h5 class="card-title mt-3">Quản lý người dùng</h5>
+                        <p class="card-text">
+                            Tạo, phân quyền, và quản lý các tài khoản người dùng.
+                        </p>
+                        <div class="mt-auto">
+                            @Html.ActionLink("Quản lý", "UserList", "Admin", null, new { @class = "btn btn-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

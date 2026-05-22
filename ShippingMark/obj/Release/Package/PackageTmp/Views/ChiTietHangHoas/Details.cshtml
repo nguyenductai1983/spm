@@ -1,0 +1,161 @@
+﻿@model ShippingMark.Models.ChiTietHangHoa
+@{
+    ViewBag.Title = "Chi tiết Hàng Hóa";
+}
+
+<h2 class="mb-4">@ViewBag.Title: @Model.MODEL</h2>
+<hr />
+
+@* PHẦN 1: Giữ nguyên phần hiển thị thông tin chi tiết của bạn *@
+<div class="card shadow-sm">
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.MODEL)</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.MODEL)</dd>
+
+            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.SIZE)</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.SIZE)</dd>
+
+            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.UsingPrint)</dt>
+            <dd class="col-sm-9">
+                @if (Model.UsingPrint == true)
+                {
+                    <span class="badge bg-success">Đã in</span>
+                }
+                else
+                {
+                    <span class="badge bg-danger">Chưa in</span>
+                }
+            </dd>
+            @* Thêm các trường khác cần hiển thị *@
+        </dl>
+    </div>
+</div>
+
+@* PHẦN 2: Bảng danh sách Containers (Thêm mới) *@
+<hr />
+<h3>Danh sách Containers liên quan</h3>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">@TempData["Message"]</div>
+}
+
+@if (Model.Containers != null && Model.Containers.Any())
+{
+    <table class="table table-bordered table-striped mt-3">
+        <thead>
+            <tr>
+                <th>Container số</th>
+                <th>Kích cỡ</th>
+                <th>Số lượng</th>
+                <th>Từ số</th>
+                <th>Đến số</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var container in Model.Containers)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => container.ContainerSo)</td>
+                    <td>@Html.DisplayFor(modelItem => container.KichCo)</td>
+                    <td>@Html.DisplayFor(modelItem => container.SoLuong)</td>
+                    <td>@Html.DisplayFor(modelItem => container.Tu)</td>
+                    <td>@Html.DisplayFor(modelItem => container.Den)</td>
+                    <td class="text-center">
+                        @if (User.IsInRole("Admin") || User.IsInRole("User"))
+                        {
+                            <button type="button" class="btn btn-sm btn-warning reprint-btn"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#reprintModal"
+                                    data-container-id="@container.ID"
+                                    data-tu="@container.Tu"
+                                    data-soluong="@container.SoLuong">
+                                Cập nhật In
+                            </button>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Không có container nào được gán.</p>
+}
+
+
+@* PHẦN 3: Các nút hành động chính (Giữ nguyên của bạn và sắp xếp lại) *@
+<div class="mt-4 text-center">
+    @if (User.IsInRole("Admin") || User.IsInRole("User"))
+    {
+        if (Model.UsingPrint != true)
+        {
+            using (Html.BeginForm("ConfirmPrint", "ChiTietHangHoas", new { id = Model.ID }, FormMethod.Post, new { @style = "display:inline-block;" }))
+            {
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-primary me-2">Xác nhận đã in</button>
+            }
+        }
+        <a href="@Url.Action("Edit", new { id = Model.ID })" class="btn btn-warning me-2">Sửa</a>
+    }
+    <a href="@Url.Action("Index")" class="btn btn-secondary">Trở về danh sách</a>
+</div>
+
+@* PHẦN 4: Modal Dialog (Thêm mới) *@
+<div class="modal fade" id="reprintModal" tabindex="-1" aria-labelledby="reprintModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @using (Html.BeginForm("UpdateReprintData", "ChiTietHangHoas", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reprintModalLabel">Cập nhật thông tin In lại</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="modalContainerId" name="containerId" />
+                    <div class="mb-3">
+                        <label for="modalTu" class="form-label">Số bắt đầu (Từ)</label>
+                        <input type="text" class="form-control" id="modalTu" name="tu">
+                    </div>
+                    <div class="mb-3">
+                        <label for="modalSoLuong" class="form-label">Số lượng</label>
+                        <input type="text" class="form-control" id="modalSoLuong" name="soLuong">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@* PHẦN 5: JavaScript cho Modal (Thêm mới) *@
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var reprintModal = document.getElementById('reprintModal');
+            if (reprintModal) {
+                reprintModal.addEventListener('show.bs.modal', function (event) {
+                    var button = event.relatedTarget;
+                    var containerId = button.getAttribute('data-container-id');
+                    var tu = button.getAttribute('data-tu');
+                    var soLuong = button.getAttribute('data-soluong');
+
+                    var modalContainerIdInput = reprintModal.querySelector('#modalContainerId');
+                    var modalTuInput = reprintModal.querySelector('#modalTu');
+                    var modalSoLuongInput = reprintModal.querySelector('#modalSoLuong');
+
+                    modalContainerIdInput.value = containerId;
+                    modalTuInput.value = tu;
+                    modalSoLuongInput.value = soLuong;
+                });
+            }
+        });
+    </script>
+}

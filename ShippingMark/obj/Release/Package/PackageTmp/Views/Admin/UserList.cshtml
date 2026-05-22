@@ -1,0 +1,43 @@
+﻿@model IEnumerable<ShippingMark.Models.UserViewModel>
+@{
+    ViewBag.Title = "Danh sách người dùng";
+}
+
+@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework
+
+<h2>Danh sách người dùng</h2>
+<p>
+    @Html.ActionLink("Thêm người dùng", "CreateUser", null, new { @class = "btn btn-success mb-3" })
+</p>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Tên đăng nhập</th>
+            <th>Email</th>
+            <th>Quyền</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>@user.Email</td>
+                <td>@string.Join(", ", user.Roles)</td>
+                <td>
+                    <a href="@Url.Action("SetUserRole", "Admin", new { userId = user.Id })" class="btn btn-info btn-sm">
+                        <i class="bi bi-person-gear me-1"></i> Đặt quyền
+                    </a>
+                    <a href="@Url.Action("ChangePasswordForUser", "Admin", new { userId = user.Id })" class="btn btn-warning btn-sm">
+                        <i class="bi bi-key me-1"></i> Đổi mật khẩu
+                    </a>
+                    <a href="@Url.Action("DeleteUser", "Admin", new { userId = user.Id })" class="btn btn-danger btn-sm">
+                        <i class="bi bi-trash me-1"></i> Xóa
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

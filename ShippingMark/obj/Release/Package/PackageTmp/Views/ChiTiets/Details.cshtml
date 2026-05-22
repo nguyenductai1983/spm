@@ -1,0 +1,129 @@
+﻿@model ShippingMark.Models.IFT
+@{
+    ViewBag.Title = "Chi tiết IFT";
+}
+
+<h2 class="mb-4">Chi tiết IFT</h2>
+<hr />
+
+<div class="container">
+    <div class="row">
+        @* Cột 1: Thông tin cơ bản *@
+        <div class="col-md-4">
+            <dl class="row">
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.REFNO)</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.REFNO)</dd>
+
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.PoNo)</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.PoNo)</dd>
+
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.MODEL)</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.MODEL)</dd>
+
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.SIZE)</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.SIZE)</dd>
+
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.GW)</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.GW)</dd>
+
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Dai)</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Dai)</dd>
+
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Rong)</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Rong)</dd>
+
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Cao)</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Cao)</dd>
+
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.COLOR)</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.COLOR)</dd>
+            </dl>
+        </div>
+
+        @* Cột 2: Thông tin chi tiết *@
+        <div class="col-md-4">
+            <dl class="row">
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Type)</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Type)</dd>
+
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.TypeSuffix)</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.TypeSuffix)</dd>
+
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.usingPrint)</dt>
+                <dd class="col-sm-8">
+                    @if (Model.usingPrint == true)
+                    {
+                        <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i> Đã in</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger"><i class="bi bi-x-circle me-1"></i> Chưa in</span>
+                    }
+                </dd>
+
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.StartSerial)</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.StartSerial)</dd>
+
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.NumSerial)</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.NumSerial)</dd>
+
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.LotNo)</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.LotNo)</dd>
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.SelectedTypeNum)</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.SelectedTypeNum)</dd>
+            </dl>
+        </div>
+
+        @* Cột 3: Thông tin khách hàng và audit *@
+        <div class="col-md-4">
+            <dl class="row">
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Customer)</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Customer)</dd>
+
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.QUANTITY)</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.QUANTITY)</dd>
+
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.COMMODITY)</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.COMMODITY)</dd>
+
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.CustomerCode)</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.CustomerCode)</dd>
+
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.CreatedBy)</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.CreatedBy)</dd>
+
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.CreatedDate)</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.CreatedDate)</dd>
+
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.LastModifiedBy)</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.LastModifiedBy)</dd>
+
+                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.LastModifiedDate)</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.LastModifiedDate)</dd>
+            </dl>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4 text-center">
+    @if (User.IsInRole("Admin") || User.IsInRole("User"))
+    {
+        if (Model.usingPrint != true)
+        {
+            using (Html.BeginForm("ConfirmPrint", "IFTs", new { id = Model.ID }, FormMethod.Post, new { @style = "display:inline-block;" }))
+            {
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-primary me-2">
+                    <i class="bi bi-printer me-1"></i> Xác nhận đã in
+                </button>
+            }
+        }
+
+        <a href="@Url.Action("Edit", new { id = Model.ID })" class="btn btn-warning me-2">
+            <i class="bi bi-pencil-square me-1"></i> Sửa
+        </a>
+    }
+        <a href="@Url.Action("Index")" class="btn btn-secondary">
+            <i class="bi bi-list-ul me-1"></i> Trở về danh sách
+        </a>
+    </div>

@@ -1,0 +1,47 @@
+﻿@model IEnumerable<ShippingMark.Models.ThongBaoIndexViewModel>
+
+@{
+    ViewBag.Title = "Danh sách Thông Báo Xuất Hàng";
+}
+
+<h2 class="mb-4">@ViewBag.Title</h2>
+
+<p>
+    @if (User.IsInRole("Admin") || User.IsInRole("User"))
+    {
+        @Html.ActionLink("Tạo Thông Báo Mới", "QuickCreate", null, new { @class = "btn btn-primary" })
+    }
+</p>
+<table class="table table-bordered table-striped table-hover">
+    <thead class="table-light">
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.KhachHangName)</th>
+            <th>@Html.DisplayNameFor(model => model.PoNo)</th>
+            <th>@Html.DisplayNameFor(model => model.REFNO)</th>
+            <th>@Html.DisplayNameFor(model => model.Ngaydukien)</th>
+            <th>Chức năng</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.KhachHangName)</td>
+                <td>@Html.DisplayFor(modelItem => item.PoNo)</td>
+                <td>@Html.DisplayFor(modelItem => item.REFNO)</td>
+                <td>@Html.DisplayFor(modelItem => item.Ngaydukien)</td>
+                <td>
+                    @Html.ActionLink("Chi Tiết TBXH", "NewViewReport", new { id = item.ID }, new { @class = "btn btn-sm btn-info", target = "_blank" })
+                    @if (User.IsInRole("Admin") || User.IsInRole("User"))
+                    {
+                        @Html.ActionLink("Sửa", "Edit", new { id = item.ID }, new { @class = "btn btn-sm btn-outline-primary" })
+                        @Html.ActionLink("Sắp xếp Cont", "ManageContainers", new { id = item.ID }, new { @class = "btn btn-sm btn-outline-success" })
+                        @Html.ActionLink("Chi tiết", "Details", new { id = item.ID }, new { @class = "btn btn-sm btn-outline-secondary" })
+                        @Html.ActionLink("Xóa", "Delete", new { id = item.ID }, new { @class = "btn btn-sm btn-outline-danger" })
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

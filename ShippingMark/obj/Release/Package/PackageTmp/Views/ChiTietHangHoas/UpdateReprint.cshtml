@@ -1,0 +1,51 @@
+﻿@model ShippingMark.Models.UpdateReprintViewModel
+@{
+    ViewBag.Title = "Cập nhật thông tin In lại";
+}
+
+<h2>@ViewBag.Title cho Model: @Model.ModelName</h2>
+<hr />
+
+@using (Html.BeginForm("UpdateReprint", "ChiTietHangHoas", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.ChiTietHangHoaId)
+    @Html.HiddenFor(m => m.ModelName)
+
+    <table class="table table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.Containers.First().ContainerSo)</th>
+                <th>@Html.DisplayNameFor(m => m.Containers.First().Tu)</th>
+                <th>@Html.DisplayNameFor(m => m.Containers.First().SoLuong)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @* Dùng vòng lặp for để Model Binding hoạt động chính xác với danh sách *@
+            @for (int i = 0; i < Model.Containers.Count; i++)
+            {
+                <tr>
+                    <td>
+                        @* ID và Số Container là bắt buộc để gửi về Controller *@
+                        @Html.HiddenFor(m => m.Containers[i].ContainerId)
+                        @Html.HiddenFor(m => m.Containers[i].ContainerSo)
+
+                        @* Hiển thị số container cho người dùng xem *@
+                        @Html.DisplayFor(m => m.Containers[i].ContainerSo)
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(m => m.Containers[i].Tu, new { @class = "form-control" })
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(m => m.Containers[i].SoLuong, new { @class = "form-control" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="mt-4">
+        <button type="submit" class="btn btn-primary">Lưu tất cả thay đổi</button>
+        @Html.ActionLink("Quay về danh sách", "Index", null, new { @class = "btn btn-secondary" })
+    </div>
+}

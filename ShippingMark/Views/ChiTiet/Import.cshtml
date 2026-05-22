@@ -1,0 +1,27 @@
+﻿@{
+    ViewBag.Title = "Import Dữ liệu từ Excel";
+}
+
+<h2>Import Dữ liệu từ Excel</h2>
+<hr />
+<div class="mt-3">
+    @Html.ActionLink("Tải file Excel mẫu", "ExportTemplate", "IFT", null, new { @class = "btn btn-outline-success" })
+</div>
+@using (Html.BeginForm("Import", "IFT", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    // Thêm dòng này để tạo token chống CSRF
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3">
+        <label for="file" class="form-label">Chọn File Excel (.xlsx hoặc .xls)</label>
+        <input type="file" class="form-control" id="file" name="file" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Tải lên và Import</button>
+}
+
+@if (ViewBag.Message != null)
+{
+    <div class="mt-3 alert @(ViewBag.IsSuccess ? "alert-success" : "alert-danger")">
+        @Html.Raw(ViewBag.Message)
+    </div>
+}
