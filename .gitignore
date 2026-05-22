@@ -22,7 +22,7 @@
 /storage/pail
 /vendor
 /setup
-/ShippingMark/*
+/ShippingMark
 _ide_helper.php
 Homestead.json
 Homestead.yaml
