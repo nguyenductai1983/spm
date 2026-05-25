@@ -10,6 +10,7 @@ use App\Http\Controllers\ChiTietsController;
 use App\Http\Controllers\ThongBaoXuatHangController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PrintController;
+use App\Http\Controllers\ActivityLogController;
 
 // Guest Routes
 Route::middleware('guest')->group(function () {
@@ -73,5 +74,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('users', UserController::class);
     Route::get('/users/{id}/password', [UserController::class, 'editPassword'])->name('users.password.edit');
     Route::post('/users/{id}/password', [UserController::class, 'updatePassword'])->name('users.password.update');
+
+    // System Logs
+    Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
 });
 

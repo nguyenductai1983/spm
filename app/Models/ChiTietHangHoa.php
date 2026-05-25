@@ -5,10 +5,12 @@ namespace App\Models;
 use App\Enums\TypeNum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 class ChiTietHangHoa extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     protected $table = 'chi_tiet_hang_hoas';
 
@@ -40,6 +42,14 @@ class ChiTietHangHoa extends Model
         'rong' => 'decimal:3',
         'cao' => 'decimal:3',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logFillable()
+            ->logOnlyDirty()
+            ->dontLogEmptyChanges();
+    }
 
     public function thongBaoXuatHang()
     {

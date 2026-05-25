@@ -80,7 +80,7 @@
             </tr>
             <tr>
                 <td class="label-col">{{ $data->TypeText ?? 'ROLL NO.' }}</td>
-                <td>{{ $page['serial'] }}</td>
+                <td>{{ $page['serial'] }} {{ $data->TypeSuffix }}</td>
             </tr>
             <tr>
                 <td class="label-col">CUSTOMER</td>

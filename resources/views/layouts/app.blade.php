@@ -159,10 +159,6 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 align-items-center">
                     @auth
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}"
-                                href="{{ route('home') }}">Trang chủ</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('chi-tiets.*') ? 'active' : '' }}"
                                 href="{{ route('chi-tiets.index') }}">Danh sách SM</a>
                         </li>
@@ -181,6 +177,10 @@
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('chi-tiet.import') ? 'active' : '' }}"
                                 href="{{ route('chi-tiet.import') }}">Import Excel</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('activity-logs.*') ? 'active' : '' }}"
+                                href="{{ route('activity-logs.index') }}">Nhật ký hệ thống</a>
                         </li>
                         @if (auth()->user()->role === 'admin')
                             <li class="nav-item">

@@ -11,7 +11,16 @@ class ChiTietsController extends Controller
 {
     public function index(Request $request)
     {
-        $query = \Illuminate\Support\Facades\DB::table('IFTs')->orderBy('ID', 'desc');
+        $query = \Illuminate\Support\Facades\DB::table('IFTs')
+            ->leftJoin('chi_tiet_hang_hoas', 'IFTs.ID', '=', 'chi_tiet_hang_hoas.id')
+            ->select(
+                'IFTs.*', 
+                'chi_tiet_hang_hoas.created_by', 
+                'chi_tiet_hang_hoas.created_at', 
+                'chi_tiet_hang_hoas.last_modified_by', 
+                'chi_tiet_hang_hoas.updated_at'
+            )
+            ->orderBy('IFTs.ID', 'desc');
 
         // Search filter if any
         if ($request->filled('search')) {
@@ -56,7 +65,7 @@ class ChiTietsController extends Controller
 
         $currentUser = Auth::user()->full_name ?? Auth::user()->name;
 
-        \App\Models\ChiTiet::create(array_merge($request->all(), [
+        ChiTietHangHoa::create(array_merge($request->all(), [
             'using_print' => $request->has('using_print') ? true : false,
             'created_by' => $currentUser,
             'last_modified_by' => $currentUser,
@@ -65,7 +74,7 @@ class ChiTietsController extends Controller
         return redirect()->route('chi-tiets.index')->with('success', 'Tạo Shipping Mark mới thành công!');
     }
 
-    public function show($id)
+    public function show(string $id)
     {
         $chiTiet = ChiTietHangHoa::with([
             'thongBaoXuatHang.khachHang',
@@ -76,7 +85,7 @@ class ChiTietsController extends Controller
         return view('chi_tiets.show', compact('chiTiet'));
     }
 
-    public function edit($id)
+    public function edit(string $id)
     {
         $chiTiet = ChiTietHangHoa::with([
             'thongBaoXuatHang.khachHang',
@@ -87,7 +96,7 @@ class ChiTietsController extends Controller
         return view('chi_tiets.edit', compact('chiTiet'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, string $id)
     {
         $chiTiet = ChiTietHangHoa::findOrFail($id);
 
@@ -149,10 +158,13 @@ class ChiTietsController extends Controller
             }
         }
 
+        // Cập nhật lại thời gian (updated_at) phòng trường hợp chỉ có dữ liệu Container thay đổi
+        $chiTiet->touch();
+
         return redirect()->route('chi-tiets.index')->with('success', 'Cập nhật Shipping Mark thành công!');
     }
 
-    public function destroy($id)
+    public function destroy(string $id)
     {
         $chiTiet = ChiTietHangHoa::findOrFail($id);
         $chiTiet->delete();
@@ -160,7 +172,7 @@ class ChiTietsController extends Controller
         return redirect()->route('chi-tiets.index')->with('success', 'Đã xóa Shipping Mark thành công!');
     }
 
-    public function confirmPrint($id)
+    public function confirmPrint(string $id)
     {
         $chiTiet = ChiTietHangHoa::findOrFail($id);
         

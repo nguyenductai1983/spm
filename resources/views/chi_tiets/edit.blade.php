@@ -8,6 +8,13 @@
         <div>
             <h2 class="page-header mb-1">Chỉnh sửa Shipping Mark</h2>
             <p class="text-muted mb-0">Cập nhật thông tin chi tiết nhãn hàng vận chuyển</p>
+            @if($chiTiet->last_modified_by)
+            <div class="mt-2 text-muted small">
+                <i class="bi bi-person-check me-1"></i> Người cập nhật cuối: <strong>{{ $chiTiet->last_modified_by }}</strong>
+                <span class="mx-2">|</span>
+                <i class="bi bi-clock me-1"></i> Ngày cập nhật cuối: <strong>{{ $chiTiet->updated_at->format('d/m/Y H:i') }}</strong>
+            </div>
+            @endif
         </div>
         <a href="{{ route('chi-tiets.index') }}" class="btn btn-outline-secondary px-3 py-2 rounded-3">
             <i class="bi bi-arrow-left-short fs-5 align-middle"></i> Trở về danh sách
@@ -206,6 +213,89 @@
             </div>
         </div>
     </form>
+</div>
+
+<!-- Phần Nhật ký thay đổi (Audit Log) -->
+<div class="card card-custom border-0 shadow-sm p-4 mt-4">
+    <h5 class="mb-4 text-primary fw-semibold"><i class="bi bi-clock-history me-2"></i>Nhật ký thay đổi</h5>
+    
+    @php
+        $activities = \Spatie\Activitylog\Models\Activity::where(function($query) use ($chiTiet) {
+            $query->where(function($q) use ($chiTiet) {
+                $q->where('subject_type', get_class($chiTiet))
+                  ->where('subject_id', $chiTiet->id);
+            });
+            if ($chiTiet->containers->isNotEmpty()) {
+                $query->orWhere(function($q) use ($chiTiet) {
+                    $q->where('subject_type', get_class($chiTiet->containers->first()))
+                      ->whereIn('subject_id', $chiTiet->containers->pluck('id'));
+                });
+            }
+        })->orderBy('created_at', 'desc')->get();
+    @endphp
+
+    @if($activities->count() > 0)
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Thời gian</th>
+                        <th>Người thực hiện</th>
+                        <th>Hành động</th>
+                        <th>Chi tiết thay đổi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($activities as $activity)
+                        <tr>
+                            <td>{{ $activity->created_at->format('d/m/Y H:i:s') }}</td>
+                            <td>{{ $activity->causer ? ($activity->causer->full_name ?? $activity->causer->name) : 'Hệ thống' }}</td>
+                            <td>
+                                @if($activity->description === 'created')
+                                    <span class="badge bg-success">Tạo mới</span>
+                                @elseif($activity->description === 'updated')
+                                    <span class="badge bg-warning text-dark">Cập nhật</span>
+                                @elseif($activity->description === 'deleted')
+                                    <span class="badge bg-danger">Xóa</span>
+                                @else
+                                    <span class="badge bg-secondary">{{ $activity->description }}</span>
+                                @endif
+                                
+                                @if(class_basename($activity->subject_type) === 'Container')
+                                    <small class="text-muted d-block mt-1">(Container)</small>
+                                @endif
+                            </td>
+                            <td>
+                                @if($activity->description === 'updated' && $activity->attribute_changes && $activity->attribute_changes->has('attributes') && $activity->attribute_changes->has('old'))
+                                    <ul class="mb-0 list-unstyled">
+                                        @foreach($activity->attribute_changes['attributes'] as $key => $value)
+                                            @if(array_key_exists($key, $activity->attribute_changes['old']))
+                                                @php
+                                                    $oldValue = $activity->attribute_changes['old'][$key];
+                                                    // Bỏ qua nếu giá trị thực sự không đổi (do format)
+                                                    if ($oldValue == $value) continue;
+                                                @endphp
+                                                <li>
+                                                    <strong>{{ $key }}:</strong> 
+                                                    <span class="text-danger text-decoration-line-through">{{ $oldValue ?? 'Trống' }}</span> 
+                                                    <i class="bi bi-arrow-right mx-1"></i> 
+                                                    <span class="text-success">{{ $value ?? 'Trống' }}</span>
+                                                </li>
+                                            @endif
+                                        @endforeach
+                                    </ul>
+                                @else
+                                    <span class="text-muted">Không có dữ liệu chi tiết</span>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    @else
+        <p class="text-muted mb-0">Chưa có thay đổi nào được ghi nhận.</p>
+    @endif
 </div>
 @endsection
 

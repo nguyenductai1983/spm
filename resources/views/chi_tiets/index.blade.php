@@ -146,10 +146,10 @@
                             <td class="text-nowrap">{{ $item->QUANTITY }}</td>
                             <td class="text-nowrap">{{ $item->COMMODITY }}</td>
                             <td class="text-nowrap font-monospace">{{ $item->CustomerCode }}</td>
-                            <td class="text-nowrap text-muted text-center">-</td>
-                            <td class="text-nowrap text-muted fs-7 text-center">-</td>
-                            <td class="text-nowrap text-muted text-center">-</td>
-                            <td class="text-nowrap text-muted fs-7 pe-4 text-center">-</td>
+                            <td class="text-nowrap text-muted text-center">{{ $item->created_by ?? '-' }}</td>
+                            <td class="text-nowrap text-muted fs-7 text-center">{{ $item->created_at ? \Carbon\Carbon::parse($item->created_at)->format('d/m/Y H:i') : '-' }}</td>
+                            <td class="text-nowrap text-muted text-center">{{ $item->last_modified_by ?? '-' }}</td>
+                            <td class="text-nowrap text-muted fs-7 pe-4 text-center">{{ $item->updated_at ? \Carbon\Carbon::parse($item->updated_at)->format('d/m/Y H:i') : '-' }}</td>
                         </tr>
                     @empty
                         <tr>
