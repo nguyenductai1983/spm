@@ -175,10 +175,6 @@
                                 href="{{ route('hang-hoas.index') }}">Hàng hóa</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('chi-tiet.import') ? 'active' : '' }}"
-                                href="{{ route('chi-tiet.import') }}">Import Excel</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('activity-logs.*') ? 'active' : '' }}"
                                 href="{{ route('activity-logs.index') }}">Nhật ký hệ thống</a>
                         </li>
