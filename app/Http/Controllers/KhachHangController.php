@@ -34,13 +34,13 @@ class KhachHangController extends Controller
         return redirect()->route('khach-hangs.index')->with('success', 'Thêm khách hàng mới thành công!');
     }
 
-    public function edit($id)
+    public function edit(string $id)
     {
         $khachHang = KhachHang::findOrFail($id);
         return view('khach_hangs.edit', compact('khachHang'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, string $id)
     {
         $khachHang = KhachHang::findOrFail($id);
 
@@ -58,7 +58,7 @@ class KhachHangController extends Controller
         return redirect()->route('khach-hangs.index')->with('success', 'Cập nhật thông tin khách hàng thành công!');
     }
 
-    public function destroy($id)
+    public function destroy(string $id)
     {
         $khachHang = KhachHang::findOrFail($id);
         

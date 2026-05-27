@@ -35,7 +35,7 @@ class ChiTietController extends Controller
             $spreadsheet = IOFactory::load($file->getRealPath());
             $sheet = $spreadsheet->getActiveSheet();
             $highestRow = $sheet->getHighestRow();
-            
+
             $currentUser = Auth::user()->full_name ?? Auth::user()->name;
             $listIft = [];
             $now = now();
@@ -45,7 +45,7 @@ class ChiTietController extends Controller
                 // Check if row is empty by checking the first column (REFNO)
                 $refNo = $sheet->getCell("A{$row}")->getValue();
                 $poNo = $sheet->getCell("B{$row}")->getValue();
-                
+
                 if (empty($refNo) && empty($poNo)) {
                     continue; // Skip empty rows
                 }
@@ -99,16 +99,14 @@ class ChiTietController extends Controller
                     'updated_at' => $now,
                 ];
             }
-
-            if (count($listIft) > 0) {
-                DB::transaction(function () use ($listIft) {
-                    ChiTiet::insert($listIft);
-                });
-                return redirect()->route('chi-tiets.index')->with('success', 'Thành công! Đã import ' . count($listIft) . ' dòng dữ liệu.');
-            } else {
-                return back()->with('error', 'Không tìm thấy dòng dữ liệu nào hợp lệ trong file Excel.');
-            }
-
+            // if (count($listIft) > 0) {
+            //     DB::transaction(function () use ($listIft) {
+            //         ChiTiet::insert($listIft);
+            //     });
+            //     return redirect()->route('chi-tiets.index')->with('success', 'Thành công! Đã import ' . count($listIft) . ' dòng dữ liệu.');
+            // } else {
+            //     return back()->with('error', 'Không tìm thấy dòng dữ liệu nào hợp lệ trong file Excel.');
+            // }
         } catch (\Exception $ex) {
             return back()->with('error', 'Đã xảy ra lỗi: ' . $ex->getMessage() . '. Vui lòng kiểm tra lại định dạng file Excel.');
         }
@@ -121,9 +119,27 @@ class ChiTietController extends Controller
         $sheet->setTitle('SM Template');
 
         $headers = [
-            'REFNO', 'PoNo', 'Mã PO 3 kí tự', 'MODEL', 'SIZE', 'NW', 'GW', 'Dài (m)', 'Rộng (m)', 'Cao (m)', 
-            'COLOR', 'Số bắt đầu', 'Số lượng in', '0 Cuộn 1 Kiện', 'In 0 - Không in 1', 'LotNo', 
-            'ROLL/PACKAGE No.', 'Nội dung sau số nhảy', 'Customer', 'QUANTITY', 'COMMODITY'
+            'REFNO',
+            'PoNo',
+            'Mã PO 3 kí tự',
+            'MODEL',
+            'SIZE',
+            'NW',
+            'GW',
+            'Dài (m)',
+            'Rộng (m)',
+            'Cao (m)',
+            'COLOR',
+            'Số bắt đầu',
+            'Số lượng in',
+            '0 Cuộn 1 Kiện',
+            'In 0 - Không in 1',
+            'LotNo',
+            'ROLL/PACKAGE No.',
+            'Nội dung sau số nhảy',
+            'Customer',
+            'QUANTITY',
+            'COMMODITY'
         ];
 
         // Write headers
@@ -134,7 +150,7 @@ class ChiTietController extends Controller
         }
 
         $fileName = 'SM_Template_' . date('YmdHis') . '.xlsx';
-        
+
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment; filename="' . urlencode($fileName) . '"');
         header('Cache-Control: max-age=0');

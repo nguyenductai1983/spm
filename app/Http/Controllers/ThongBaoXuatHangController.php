@@ -24,7 +24,7 @@ class ThongBaoXuatHangController extends Controller
         return view('thong_bao_xuat_hang.index', compact('thongBaoList'));
     }
 
-    public function show($id)
+    public function show(string $id)
     {
         $thongBao = ThongBaoXuatHang::with([
             'khachHang',
@@ -118,7 +118,7 @@ class ThongBaoXuatHangController extends Controller
         }
     }
 
-    public function edit($id)
+    public function edit(string $id)
     {
         $thongBao = ThongBaoXuatHang::with([
             'chiTietHangHoas.containers'
@@ -130,7 +130,7 @@ class ThongBaoXuatHangController extends Controller
         return view('thong_bao_xuat_hang.quick_create', compact('khachHangs', 'hangHoas', 'thongBao'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, string $id)
     {
         $thongBao = ThongBaoXuatHang::with([
             'chiTietHangHoas',
@@ -231,7 +231,7 @@ class ThongBaoXuatHangController extends Controller
         }
     }
 
-    public function destroy($id)
+    public function destroy(string $id)
     {
         $thongBao = ThongBaoXuatHang::findOrFail($id);
         
@@ -252,7 +252,7 @@ class ThongBaoXuatHangController extends Controller
         }
     }
 
-    public function manageContainers($id)
+    public function manageContainers(string $id)
     {
         $thongBao = ThongBaoXuatHang::with([
             'khachHang',
@@ -276,7 +276,7 @@ class ThongBaoXuatHangController extends Controller
         return view('thong_bao_xuat_hang.manage_containers', compact('thongBao', 'existingContainers'));
     }
 
-    public function storeContainer(Request $request, $id)
+    public function storeContainer(Request $request, string $id)
     {
         $request->validate([
             'container_so' => 'required|string|max:255',
@@ -303,14 +303,14 @@ class ThongBaoXuatHangController extends Controller
             ->with('success', 'Đã thêm Container sắp xếp thành công.');
     }
 
-    public function editContainer($id)
+    public function editContainer(string $id)
     {
         $container = Container::with('thongBaoXuatHang.chiTietHangHoas')->findOrFail($id);
         
         return view('thong_bao_xuat_hang.edit_container', compact('container'));
     }
 
-    public function updateContainer(Request $request, $id)
+    public function updateContainer(Request $request, string $id)
     {
         $container = Container::findOrFail($id);
 
@@ -338,7 +338,7 @@ class ThongBaoXuatHangController extends Controller
             ->with('success', 'Đã cập nhật Container thành công.');
     }
 
-    public function deleteContainer($id)
+    public function deleteContainer(string $id)
     {
         $container = Container::findOrFail($id);
         $thongBaoId = $container->thong_bao_xuat_hang_id;
@@ -346,7 +346,7 @@ class ThongBaoXuatHangController extends Controller
         return view('thong_bao_xuat_hang.delete_container', compact('container', 'thongBaoId'));
     }
 
-    public function destroyContainer($id)
+    public function destroyContainer(string $id)
     {
         $container = Container::findOrFail($id);
         $thongBaoId = $container->thong_bao_xuat_hang_id;
@@ -356,7 +356,7 @@ class ThongBaoXuatHangController extends Controller
             ->with('success', 'Đã xóa Container thành công.');
     }
 
-    public function viewReport($id)
+    public function viewReport(string $id)
     {
         $thongBao = ThongBaoXuatHang::with([
             'khachHang',
@@ -392,7 +392,7 @@ class ThongBaoXuatHangController extends Controller
         return view('thong_bao_xuat_hang.report', compact('thongBao', 'containerGroups', 'creatorName'));
     }
 
-    public function downloadPdf($id)
+    public function downloadPdf(string $id)
     {
         $thongBao = ThongBaoXuatHang::with([
             'khachHang',

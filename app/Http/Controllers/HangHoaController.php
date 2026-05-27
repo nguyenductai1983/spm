@@ -34,13 +34,13 @@ class HangHoaController extends Controller
         return redirect()->route('hang-hoas.index')->with('success', 'Thêm hàng hóa mới thành công!');
     }
 
-    public function edit($id)
+    public function edit(string $id)
     {
         $hangHoa = HangHoa::findOrFail($id);
         return view('hang_hoas.edit', compact('hangHoa'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, string $id)
     {
         $hangHoa = HangHoa::findOrFail($id);
 
@@ -58,7 +58,7 @@ class HangHoaController extends Controller
         return redirect()->route('hang-hoas.index')->with('success', 'Cập nhật thông tin hàng hóa thành công!');
     }
 
-    public function destroy($id)
+    public function destroy(string $id)
     {
         $hangHoa = HangHoa::findOrFail($id);
 
